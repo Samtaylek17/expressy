@@ -21,7 +21,8 @@ const createSendToken = (user, statusCode, res, next) => {
 	};
 
 	if (config.NODE_ENV === 'production') {
-		cookieOptions.secure = req.secure || req.headers('x-forwarded-proto') === 'https';
+		cookieOptions.secure = true;
+		// req.secure || req.headers('x-forwarded-proto') === 'https';
 	}
 
 	res.cookie('jwt', token, cookieOptions);
@@ -37,17 +38,12 @@ const createSendToken = (user, statusCode, res, next) => {
 };
 
 const signup = catchAsync(async (req, res, next) => {
-	const { firstname, lastname, email, password, passwordConfirm } = req.body;
-	if (!firstname || !lastname || !email || !password || !passwordConfirm) {
-		return next(new AppError('All fields are rquired', 400));
-	}
-
 	req.body.joinedDate = Date.now();
 	req.body.lastSeen = Date.now();
 
 	const user = await User.create(req.body);
 
-	createSendToken(user, 201, req, res);
+	createSendToken(user, 201, res);
 });
 
 const login = catchAsync(async (req, res, next) => {
@@ -69,7 +65,7 @@ const login = catchAsync(async (req, res, next) => {
 	const lastSeen = Date.now();
 	await User.findByIdAndUpdate(user.id, { lastSeen });
 
-	createSendToken(user, 200, req, res);
+	createSendToken(user, 200, res);
 });
 
 // Logout
@@ -185,3 +181,5 @@ const updatePassword = catchAsync(async (req, res, next) => {
 	// Log User in, send JWT
 	createSendToken(user, 201, res);
 });
+
+module.exports = { signup, login, logout, protect, forgotPassword, resetPassword, updatePassword };

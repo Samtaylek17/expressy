@@ -5,10 +5,11 @@ const morgan = require('morgan');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const cookieParser = require('cookie-parser');
-const compression = require('compression');
 const cors = require('cors');
+const AppError = require('./utils/app_error');
 
 const globalErrorHandler = require('./controllers/error_handlers');
+const userRouter = require('./routes/user');
 
 const app = express();
 
@@ -27,6 +28,8 @@ if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'));
 }
 
+// BODY PARSER, reading data from body into req.body
+app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -44,6 +47,14 @@ app.use((req, res, next) => {
 app.get('/', (req, res, next) => {
 	res.send('<h2>Welcome to My Social App Api</h2>');
 });
+
+app.use('/api/v1/user', userRouter);
+
+//for not found pages
+//all http methods -> all()
+// app.all('*', (req, res, next) => {
+// 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+// });
 
 app.use(globalErrorHandler);
 
