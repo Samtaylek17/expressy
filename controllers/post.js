@@ -105,7 +105,8 @@ const updatePost = catchAsync(async (req, res, next) => {
 			req.body.media = result.secure_url;
 
 			const post_author = await Post.findById(req.params.postId);
-			if (post_author.postedBy !== req.user.id) {
+
+			if (post_author.postedBy.id !== req.user.id) {
 				return next(new AppError('You do have the permission to edit this post', 403));
 			}
 
@@ -121,7 +122,11 @@ const updatePost = catchAsync(async (req, res, next) => {
 				post,
 			});
 		} else {
-			req.body.updatedAt = Date.now();
+			const post_author = await Post.findById(req.params.postId);
+
+			if (post_author.postedBy.id !== req.user.id) {
+				return next(new AppError('You do have the permission to edit this post', 403));
+			}
 			const post = await Post.findByIdAndUpdate(req.params.postId, req.body, {
 				new: true, //to return just the updated field
 				runValidators: true, // run validators again
@@ -130,6 +135,7 @@ const updatePost = catchAsync(async (req, res, next) => {
 			if (!post) {
 				return next(new AppError('No post found with that ID', 404));
 			}
+			req.body.updatedAt = Date.now();
 
 			res.status(200).json({
 				status: 'success',
