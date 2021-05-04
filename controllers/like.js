@@ -3,6 +3,9 @@ const Post = require('../models/post');
 const catchAsync = require('../utils/catch_async');
 const AppError = require('../utils/app_error');
 
+/**
+ * 
+ */
 const addLike = catchAsync(async (req, res, next) => {
 	try {
 		const existing_post = await Post.findById(req.params.postId);
@@ -43,6 +46,9 @@ const addLike = catchAsync(async (req, res, next) => {
 	}
 });
 
+/**
+ * 
+ */
 const removeLike = catchAsync(async (req, res, next) => {
 	try {
 		const existing_post = await Post.findById(req.params.postId);

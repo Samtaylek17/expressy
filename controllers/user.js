@@ -11,6 +11,12 @@ cloudinary.config({
 	api_secret: config.CLOUDINARY_API_SECRET,
 });
 
+/**
+ *
+ * @param {*} obj
+ * @param  {...any} allowedFields
+ * @returns newObj
+ */
 const filterObj = (obj, ...allowedFields) => {
 	const newObj = {};
 	Object.keys(obj).forEach((el) => {
@@ -22,6 +28,9 @@ const filterObj = (obj, ...allowedFields) => {
 
 const uploadPhoto = imageUploader.single('photo');
 
+/**
+ *
+ */
 const updateProfile = catchAsync(async (req, res, next) => {
 	// Return Error If user post password
 	if (req.body.password || req.body.passwordConfirm) {
@@ -72,6 +81,13 @@ const updateProfile = catchAsync(async (req, res, next) => {
 	}
 });
 
+/**
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ *
+ * @returns user
+ */
 const getProfile = catchAsync(async (req, res, next) => {
 	try {
 		const user = await User.findById(req.user.id);

@@ -12,8 +12,12 @@ cloudinary.config({
 	api_secret: config.CLOUDINARY_API_SECRET,
 });
 
+
 const uploadMedia = imageUploader.single('media');
 
+/**
+ * 
+ */
 const createPost = catchAsync(async (req, res, next) => {
 	const { title, body } = req.body;
 
@@ -53,6 +57,10 @@ const createPost = catchAsync(async (req, res, next) => {
 	}
 });
 
+
+/**
+ * 
+ */
 const getAllPosts = catchAsync(async (req, res, next) => {
 	try {
 		let filter = {};
@@ -75,6 +83,9 @@ const getAllPosts = catchAsync(async (req, res, next) => {
 	}
 });
 
+/**
+ * 
+ */
 const getSinglePost = catchAsync(async (req, res, next) => {
 	const postId = req.params.postId;
 	try {
@@ -95,6 +106,9 @@ const getSinglePost = catchAsync(async (req, res, next) => {
 	}
 });
 
+/**
+ * 
+ */
 const updatePost = catchAsync(async (req, res, next) => {
 	try {
 		// Check if user is the owner of post
@@ -149,6 +163,10 @@ const updatePost = catchAsync(async (req, res, next) => {
 	}
 });
 
+
+/**
+ * 
+ */
 const deletePost = catchAsync(async (req, res, next) => {
 	try {
 		const post_author = await Post.findById(req.params.postId);

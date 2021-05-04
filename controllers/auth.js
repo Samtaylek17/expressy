@@ -7,12 +7,26 @@ const catchAsync = require('../utils/catch_async');
 const AppError = require('../utils/app_error');
 const Email = require('../utils/email');
 
+/**
+ *
+ * @param {*} id
+ * @returns {*} token
+ */
 const signToken = (id) => {
 	return jwt.sign({ id }, config.JWT_SECRET, {
 		expiresIn: config.JWT_EXPIRES_IN,
 	});
 };
 
+/**
+ * This method signs user with JWT signature and
+ * sends generated token to user
+ *
+ * @param {*} user
+ * @param {*} statusCode
+ * @param {*} res
+ * @param {*} next
+ */
 const createSendToken = (user, statusCode, res, next) => {
 	const token = signToken(user.id);
 
@@ -38,6 +52,21 @@ const createSendToken = (user, statusCode, res, next) => {
 	});
 };
 
+/**
+ * This methods signs user up and send token to header
+ * @param {*} firstname
+ * @param {*} lastname
+ * @param {*} email
+ * @param {*} password
+ * @param {*} passwordConfirm
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ *
+ * @returns {*} token
+ * @returns {*} user
+ */
 const signup = catchAsync(async (req, res, next) => {
 	req.body.joinedDate = Date.now();
 	req.body.lastSeen = Date.now();
@@ -51,6 +80,20 @@ const signup = catchAsync(async (req, res, next) => {
 	createSendToken(user, 201, res);
 });
 
+/**
+ * This method logs user in with valid credentials
+ *
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ *
+ * @param {*} email
+ * @param {*} password
+ *
+ * @returns {*} token
+ * @returns {*} user
+ */
 const login = catchAsync(async (req, res, next) => {
 	const { email, password } = req.body;
 
@@ -74,6 +117,12 @@ const login = catchAsync(async (req, res, next) => {
 });
 
 // Logout
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ */
 const logout = (req, res) => {
 	res.cookie('jwt', 'loggedout', {
 		expires: new Date(Date.now() + 10 * 1000),
@@ -82,6 +131,18 @@ const logout = (req, res) => {
 	res.status(200).json({ status: 'success' });
 };
 
+/**
+ *
+ * This middleware protects routes from unauthorized
+ * endpoints by checking if user making request to API
+ * has valid token
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ *
+ * @returns {*} user
+ */
 const protect = catchAsync(async (req, res, next) => {
 	// Get token and check if user exist
 	let token;
@@ -115,6 +176,18 @@ const protect = catchAsync(async (req, res, next) => {
 	next();
 });
 
+/**
+ *
+ * This middleware sends token to user email to reset password
+ * in case user forgot password
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ *
+ *
+ * @returns {*} token
+ */
 const forgotPassword = catchAsync(async (req, res, next) => {
 	// Get user based on posted email
 	const user = await User.findOne({ email: req.body.email });
@@ -145,6 +218,17 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 	}
 });
 
+/**
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ *
+ * This method accepts the token sent to user email as parameter
+ * @param {*} hashedToken
+ *
+ * @returns {*} token
+ * @returns {*} user
+ */
 const resetPassword = catchAsync(async (req, res, next) => {
 	// Get user based on token
 	const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
@@ -168,6 +252,11 @@ const resetPassword = catchAsync(async (req, res, next) => {
 	createSendToken(user, 201, res);
 });
 
+/**
+ *  @params {*} req
+ *  @params {*} res
+ *  @params {*} next
+ */
 const updatePassword = catchAsync(async (req, res, next) => {
 	// Get user from collection
 	const user = await User.findById(req.user.id).select('+password');

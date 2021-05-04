@@ -1,27 +1,58 @@
 const AppError = require('../utils/app_error');
 const config = require('../config/config');
 
+/**
+ * 
+ * @param {*} err 
+ * @returns 
+ */
 const handleCastErrorDB = (err) => {
 	const message = `Invalid ${err.path}: ${err.value}.`;
 	return new AppError(message, 400);
 };
 
+
+/**
+ * 
+ * @param {*} err 
+ * @returns 
+ */
 const handleDuplicateFieldsDB = (err) => {
 	const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
 	const message = `Duplicate field value: ${value}. Please use another value!`;
 	return new AppError(message, 400);
 };
 
+/**
+ * 
+ * @param {*} err 
+ * @returns 
+ */
 const handleValidationErrorDB = (err) => {
 	const errors = Object.values(err.errors).map((el) => el.message);
 	const message = `Invalid input data. ${errors.join(' . ')}`;
 	return new AppError(message, 400);
 };
 
+/**
+ * 
+ * @returns 
+ */
 const handleJWTError = () => new AppError('Invalid token. Please log in again', 401);
 
+/**
+ * 
+ * @returns 
+ */
 const handleJWTExpiredError = () => new AppError('Your token has expired! Please log in again.', 401);
 
+
+/**
+ * 
+ * @param {*} err 
+ * @param {*} req 
+ * @param {*} res 
+ */
 const sendErrorDev = (err, req, res) => {
 	if (req.originalUrl.startsWith('/api')) {
 		res.status(err.statusCode).json({
@@ -33,6 +64,14 @@ const sendErrorDev = (err, req, res) => {
 	}
 };
 
+
+/**
+ * 
+ * @param {*} err 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const sendErrorProd = (err, req, res) => {
 	if (req.originalUrl.startsWith('/api')) {
 		// Operational, trusted error: send message to client
@@ -53,6 +92,13 @@ const sendErrorProd = (err, req, res) => {
 	}
 };
 
+/**
+ * 
+ * @param {*} err 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 module.exports = (err, req, res, next) => {
 	err.statusCode = err.statusCode || 400;
 
