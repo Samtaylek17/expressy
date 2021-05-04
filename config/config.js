@@ -13,6 +13,7 @@ const config = {
 	MAILGUN_API_KEY: process.env.MAILGUN_API_KEY,
 	MAILGUN_DOMAIN: process.env.MAILGUN_DOMAIN,
 	EMAIL_FROM: process.env.EMAIL_FROM,
+	EMAIL_PASS: process.env.EMAIL_PASS,
 };
 
 module.exports = config;

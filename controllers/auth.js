@@ -5,6 +5,7 @@ const config = require('../config/config');
 const User = require('../models/user');
 const catchAsync = require('../utils/catch_async');
 const AppError = require('../utils/app_error');
+const Email = require('../utils/email');
 
 const signToken = (id) => {
 	return jwt.sign({ id }, config.JWT_SECRET, {
@@ -43,6 +44,10 @@ const signup = catchAsync(async (req, res, next) => {
 
 	const user = await User.create(req.body);
 
+	// Send welcome
+	const url = `${req.protocol}://${req.get('host')}`;
+
+	await new Email(user, url).sendWelcome();
 	createSendToken(user, 201, res);
 });
 
@@ -125,7 +130,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 	// Send it to user's email
 	try {
 		const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
-		// await new Email(user, resetURL).sendPasswordReset()
+		await new Email(user, resetURL).sendPasswordReset();
 
 		res.status(200).json({
 			status: 'success',
@@ -168,7 +173,7 @@ const updatePassword = catchAsync(async (req, res, next) => {
 	const user = await User.findById(req.user.id).select('+password');
 
 	// Check if posted password is correct
-	if (!user || !(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+	if (!user || !(await user.correctPassword(req.body.currentPassword, user.password))) {
 		return next(new AppError('Your current password is wrong!', 401));
 	}
 

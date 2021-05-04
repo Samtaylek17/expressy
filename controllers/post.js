@@ -97,10 +97,19 @@ const getSinglePost = catchAsync(async (req, res, next) => {
 
 const updatePost = catchAsync(async (req, res, next) => {
 	try {
+		// Check if user is the owner of post
+
 		if (req.file) {
 			const result = await cloudinary.uploader.upload(req.file.path, { resource_type: 'image' });
 
 			req.body.media = result.secure_url;
+
+			const post_author = await Post.findById(req.params.postId);
+			if (post_author.postedBy !== req.user.id) {
+				return next(new AppError('You do have the permission to edit this post', 403));
+			}
+
+			req.body.updatedAt = Date.now();
 
 			const post = await Post.findByIdAndUpdate(req.params.postId, req.body, {
 				new: true, //to return just the updated field
@@ -112,6 +121,7 @@ const updatePost = catchAsync(async (req, res, next) => {
 				post,
 			});
 		} else {
+			req.body.updatedAt = Date.now();
 			const post = await Post.findByIdAndUpdate(req.params.postId, req.body, {
 				new: true, //to return just the updated field
 				runValidators: true, // run validators again
@@ -135,6 +145,11 @@ const updatePost = catchAsync(async (req, res, next) => {
 
 const deletePost = catchAsync(async (req, res, next) => {
 	try {
+		const post_author = await Post.findById(req.params.postId);
+		if (post_author.postedBy.id !== req.user.id) {
+			return next(new AppError('You do have the permission to delete this post', 403));
+		}
+
 		const post = await Post.findByIdAndDelete(req.params.postId);
 
 		if (!post) {

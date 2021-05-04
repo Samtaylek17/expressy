@@ -46,6 +46,14 @@ const postSchema = new mongoose.Schema(
 	}
 );
 
+postSchema.pre(/^find/, function (next) {
+	this.populate({
+		path: 'postedBy',
+		select: '-__v',
+	});
+	next();
+});
+
 const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;

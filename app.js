@@ -10,6 +10,7 @@ const AppError = require('./utils/app_error');
 
 const globalErrorHandler = require('./controllers/error_handlers');
 const userRouter = require('./routes/user');
+const postRouter = require('./routes/post');
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.get('/', (req, res, next) => {
 });
 
 app.use('/api/v1/user', userRouter);
+app.use('/api/v1/post', postRouter);
 
 //for not found pages
 //all http methods -> all()
