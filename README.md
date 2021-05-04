@@ -19,6 +19,11 @@ Installs all the project dependencies including dev dependencies.
 Runs the app in the development mode.\
 App runs on port 5001
 
+### `npm run prod`
+
+Runs the app in the production mode.\
+App runs on port 5001
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.
