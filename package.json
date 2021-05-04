@@ -6,6 +6,7 @@
 	"scripts": {
 		"start": "node server.js",
 		"dev": "env-cmd -f ./config/config.env nodemon server.js",
+		"prod": "env-cmd -f ./config/config.env cross-env NODE_ENV=production nodemon server.js",
 		"test": "env-cmd -f ./config/test.env jest --watch --forceExit --detectOpenHandles"
 	},
 	"jest": {
@@ -25,6 +26,8 @@
 		"compression": "^1.7.4",
 		"cookie-parser": "^1.4.5",
 		"cors": "^2.8.5",
+		"cross-env": "^7.0.3",
+		"crypto": "^1.0.1",
 		"env-cmd": "^10.1.0",
 		"express": "^4.17.1",
 		"express-mongo-sanitize": "^2.0.2",

@@ -61,19 +61,7 @@ module.exports = class Email {
 		await this.send('welcome', 'Welcome to Expressy');
 	}
 
-	async sendLogin(info) {
-		await this.send('login', 'New Login Alert', info);
-	}
-
-	async sendDeactivate() {
-		await this.send('deactivate', 'Are you done with your project');
-	}
-
 	async sendPasswordReset() {
 		await this.send('passwordReset', 'Reset your Password (Url valid for 10 mins)');
-	}
-
-	async sendVerifyEmail() {
-		await this.send('verifyEmail', 'Verify Your Email (Url valid for 10 mins)');
 	}
 };

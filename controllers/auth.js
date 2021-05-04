@@ -47,7 +47,7 @@ const signup = catchAsync(async (req, res, next) => {
 	// Send welcome
 	const url = `${req.protocol}://${req.get('host')}`;
 
-	// await new Email(user, url).sendWelcome();
+	await new Email(user, url).sendWelcome();
 	createSendToken(user, 201, res);
 });
 
