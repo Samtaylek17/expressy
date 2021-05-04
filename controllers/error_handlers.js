@@ -54,7 +54,8 @@ const sendErrorProd = (err, req, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-	err.statusCode = err.statusCode || 500;
+	err.statusCode = err.statusCode || 400;
+
 	err.status = err.status || 'error';
 
 	if (config.NODE_ENV === 'development') {
@@ -66,7 +67,7 @@ module.exports = (err, req, res, next) => {
 
 		if (error.name === 'CastError') error = handleCastErrorDB(error);
 		if (err.code === 11000) error = handleDuplicateFieldsDB(error);
-		if (error.name === 'validationError') error = handleValidationErrorDB(error);
+		if (error.name === 'ValidationError') error = handleValidationErrorDB(error);
 		if (error.name === 'JsonWebTokenError') error = handleJWTError();
 		if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
 

@@ -69,14 +69,6 @@ module.exports = class Email {
 		await this.send('deactivate', 'Are you done with your project');
 	}
 
-	async sendPasswordDetails(info) {
-		await this.send('password-details', 'Login credentials', info);
-	}
-
-	async sendCheckoutCode(info) {
-		await this.send('checkout-code', 'Sign Out Code', info);
-	}
-
 	async sendPasswordReset() {
 		await this.send('passwordReset', 'Reset your Password (Url valid for 10 mins)');
 	}

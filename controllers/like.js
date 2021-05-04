@@ -58,7 +58,7 @@ const removeLike = catchAsync(async (req, res, next) => {
 		await Post.findByIdAndUpdate(req.params.postId, { $pull: { likes: like.id } }, { new: true, runValidators: true });
 		await Like.findOneAndDelete({ post: req.params.postId, likedBy: req.user.id });
 
-		res.sttaus(204).json({
+		res.status(204).json({
 			status: 'success',
 			like: null,
 		});

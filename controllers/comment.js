@@ -17,6 +17,7 @@ const uploadMedia = imageUploader.single('media');
 
 const addComment = catchAsync(async (req, res, next) => {
 	try {
+		console.log(req.body);
 		if (!req.body.comment) {
 			return next(new AppError('Comment cannot be empty', 404));
 		}

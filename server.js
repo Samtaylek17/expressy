@@ -31,7 +31,7 @@ if (config.NODE_ENV === 'production') {
 		.then(() => console.log('DB connection successful'));
 }
 
-const port = config.PORT;
+const port = config.PORT || 5003;
 
 const server = app.listen(port, () => {
 	console.log(`App running on port ${port}`);

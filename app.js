@@ -6,11 +6,11 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const AppError = require('./utils/app_error');
 
 const globalErrorHandler = require('./controllers/error_handlers');
 const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
+const likeRouter = require('./routes/like');
 
 const app = express();
 
@@ -51,6 +51,7 @@ app.get('/', (req, res, next) => {
 
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/post', postRouter);
+app.use('/api/v1/like', likeRouter);
 
 //for not found pages
 //all http methods -> all()
