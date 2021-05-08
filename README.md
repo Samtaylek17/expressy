@@ -6,6 +6,11 @@ A platform to express your creative ideas through writing
 
 This project was built with NodeJs and Express
 
+## API Documentation
+
+The API documentation is hosted on Postman visit [https://documenter.getpostman.com/view/9144454/TzRRDTz4] to access the
+documentation
+
 ## Available Scripts
 
 To get this project running, you need to have Nodejs and npm installed. In the project directory, you can run:
